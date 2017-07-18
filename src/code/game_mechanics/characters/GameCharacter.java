@@ -6,6 +6,7 @@ import java.util.HashMap;
 import code.game_mechanics.Ability;
 import code.game_mechanics.StatusEffect;
 import javafx.scene.Group;
+import javafx.scene.canvas.Canvas;
 
 public abstract class GameCharacter {
 	/*
@@ -133,6 +134,11 @@ public abstract class GameCharacter {
 	 * This variable stores it for modification of the graphics later.
 	 */
 	public Group graphics;
+	
+	/*
+	 * An arraylist holding all the turn icons representing this character.
+	 */
+	public ArrayList<Canvas> turnIcons;
 	
 	/*
 	 * All characters have an image to depict them. The file name is stored in 

@@ -46,7 +46,7 @@ public class MessageBox {
 	public static Group playerCommandMenu;
 	public static Group playerListAbilities;
 	public static Group cancelBox;
-	public static Canvas turnCounter;
+	public static Group turnCounter;
 	
 	/*
 	 * A static method to initialize the various static groups representing messageboxes.
@@ -72,8 +72,7 @@ public class MessageBox {
     	cancelBox.getChildren().add(MessageBox.createButton(12, 75, 168, 42, "Cancel"));
     	cancelBox.toFront();
     	cancelBox.setVisible(false);
-    	turnCounter = new Canvas(28 * Constants.turnsAhead - 4, 24);
-    	turnCounter = MessageBox.drawTurnCounter();
+    	turnCounter = MessageBox.initializeTurnCounter();
     	graphics.getChildren().addAll(enemyStatusBox, playerCommandMenu, playerListAbilities, cancelBox, turnCounter);
 	}
 	
@@ -170,16 +169,45 @@ public class MessageBox {
 	}
 	
 	/*
+	 * A function to initialize the turn counter. It draws up the initial turn order
+	 * and creates instances of the group for the turn counter and the canvases
+	 * for the turn icons.
+	 */
+	public static Group initializeTurnCounter() {
+		TurnCounter.predictTurns(TurnCounter.getCharacters());
+		turnCounter = new Group();
+		int offset = 0;
+		for (int i = 0; i < 12; i++) {
+			GameCharacter character = TurnCounter.turnOrder[i];
+			Canvas icon = new Canvas(24, 24);
+			GraphicsContext gc = icon.getGraphicsContext2D();
+			gc.drawImage(Graphics.getIcon(character), 0, 0);
+			icon.setLayoutX(offset);
+			character.turnIcons.add(icon);
+			offset += 28;
+		}
+		turnCounter.toFront();
+		return turnCounter;
+	}
+	
+	/*
 	 * Creates the turn counter showing the next 12 turns. It draws the icons of
 	 * the characters that are going next.
 	 */
-	public static Canvas drawTurnCounter() {
+	public static Group drawTurnCounter() {
 		TurnCounter.predictTurns(TurnCounter.getCharacters());
-		GraphicsContext gc = turnCounter.getGraphicsContext2D();
-		gc.clearRect(0, 0, turnCounter.getWidth(), turnCounter.getHeight());
 		int offset = 0;
 		for (GameCharacter character : TurnCounter.turnOrder) {
-			gc.drawImage(Graphics.getIcon(character), offset, 0);
+			character.turnIcons.clear();
+		}
+		for (int i = 0; i < 12; i++) {
+			GameCharacter character = TurnCounter.turnOrder[i];
+			Canvas icon = (Canvas) turnCounter.getChildren().get(i);
+			GraphicsContext gc = icon.getGraphicsContext2D();
+			gc.clearRect(0, 0, icon.getWidth(), icon.getHeight());
+			gc.drawImage(Graphics.getIcon(character), 0, 0);
+			icon.setLayoutX(offset);
+			character.turnIcons.add(icon);
 			offset += 28;
 		}
 		turnCounter.toFront();
