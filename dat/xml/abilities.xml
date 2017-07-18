@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<abilities>
+	<ability id="0">
+		<name>fireball</name>
+		<power>80</power>
+		<accuracy>100</accuracy>
+		<critchance>5</critchance>
+	</ability>
+	<ability id="1">
+		<name>tutorial</name>
+		
+	</ability>
+</abilities>

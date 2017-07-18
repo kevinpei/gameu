@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enemies>
+	<enemy id="0">
+		<name>Taira no Chouki</name>
+		<description>Vengeful spirit of a betrayed man</description>
+		<img>Chouki.png</img>
+		<width>205</width>
+		<icon>enemy.png</icon>
+		<statistics>
+			<attack>300</attack>
+			<intelligence>350</intelligence>
+			<speed>38</speed>
+			<finesse>31</finesse>
+			<defense>500</defense>
+			<mdefense>600</mdefense>
+			<maxHP>2500</maxHP>
+			<maxMP>500</maxMP>
+			<maxAP>15</maxAP>
+			<accuracy>10</accuracy>
+			<evasion>0</evasion>
+			<critChance>5</critChance>`
+		</statistics>
+		<abilities>
+			<ability id="1" name="evilEye" has="true" />
+			<ability id="2" name="ritual" has="true" />
+			<ability id="3" name="bloodCurse" has="true" />
+			<ability id="4" name="revenge" has="true" />
+			<ability id="5" name="torpor" has="false" />
+			<ability id="6" name="weaken" has="false" />
+			<ability id="7" name="evilCircle" has="false" />
+			<ability id="8" name="trauma" has="false" />
+		</abilities>
+	</enemy>
+	<enemy id="1">
+		<name>Tenkai Zuifeng</name>
+		<description>Barrier builder from Azumaterasu</description>
+		<img>Tenkai.png</img>
+		<width>284</width>
+		<icon>enemy.png</icon>
+		<statistics>
+			<attack>300</attack>
+			<intelligence>350</intelligence>
+			<speed>38</speed>
+			<finesse>31</finesse>
+			<defense>500</defense>
+			<mdefense>600</mdefense>
+			<maxHP>2500</maxHP>
+			<maxMP>500</maxMP>
+			<maxAP>15</maxAP>
+			<accuracy>10</accuracy>
+			<evasion>0</evasion>
+			<critChance>5</critChance>
+		</statistics>
+	</enemy>
+	<enemy id="2">
+		<name>Tsurubami Senri</name>
+		<description>Expert at destroying barriers</description>
+		<img>Tsurubami.png</img>
+		<width>168</width>
+		<icon>enemy.png</icon>
+		<statistics>
+			<attack>300</attack>
+			<intelligence>350</intelligence>
+			<speed>38</speed>
+			<finesse>31</finesse>
+			<defense>500</defense>
+			<mdefense>600</mdefense>
+			<maxHP>2500</maxHP>
+			<maxMP>500</maxMP>
+			<maxAP>15</maxAP>
+			<accuracy>10</accuracy>
+			<evasion>0</evasion>
+			<critChance>5</critChance>
+		</statistics>
+	</enemy>
+	<enemy id="3">
+		<name>Tutorial</name>
+		<description>Tutorial fight</description>
+		<img>Suzumi.png</img>
+		<width>190</width>
+		<icon>enemy.png</icon>
+		<statistics>
+			<attack>300</attack>
+			<intelligence>350</intelligence>
+			<speed>38</speed>
+			<finesse>31</finesse>
+			<defense>500</defense>
+			<mdefense>600</mdefense>
+			<maxHP>2500</maxHP>
+			<maxMP>500</maxMP>
+			<maxAP>15</maxAP>
+			<accuracy>10</accuracy>
+			<evasion>0</evasion>
+			<critChance>5</critChance>
+		</statistics>
+	</enemy>
+</enemies>

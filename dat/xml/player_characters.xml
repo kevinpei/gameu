@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playerCharacters>
+	<character id="0">
+		<name>Hexer</name>
+		<description>Can lay terrifying curses on enemies</description>
+		<img>placeholder.png</img>
+		<icon>player.png</icon>
+		<statistics>
+			<attack>300</attack>
+			<intelligence>350</intelligence>
+			<speed>38</speed>
+			<finesse>31</finesse>
+			<defense>500</defense>
+			<mdefense>600</mdefense>
+			<maxHP>2500</maxHP>
+			<maxMP>500</maxMP>
+			<maxAP>9</maxAP>
+			<accuracy>10</accuracy>
+			<evasion>0</evasion>
+			<critChance>5</critChance>
+		</statistics>
+		<abilities>
+			<ability id="1" name="evilEye" has="true" />
+			<ability id="2" name="ritual" has="true" />
+			<ability id="3" name="bloodCurse" has="true" />
+			<ability id="4" name="revenge" has="true" />
+			<ability id="5" name="torpor" has="false" />
+			<ability id="6" name="weaken" has="false" />
+			<ability id="7" name="evilCircle" has="false" />
+			<ability id="8" name="trauma" has="false" />
+		</abilities>
+	</character>
+	<character id="1">
+		<name>Arcanist</name>
+		<description>Uses mana to fuel devastating attacks</description>
+		<img>placeholder.png</img>
+		<icon>player.png</icon>
+		<statistics>
+			<attack>200</attack>
+			<intelligence>600</intelligence>
+			<speed>28</speed>
+			<finesse>38</finesse>
+			<defense>150</defense>
+			<mdefense>450</mdefense>
+			<maxHP>1800</maxHP>
+			<maxMP>800</maxMP>
+			<maxAP>12</maxAP>
+			<accuracy>20</accuracy>
+			<evasion>0</evasion>
+			<critChance>8</critChance>
+		</statistics>
+		<abilities>
+			<ability id="9" name="fire" has="true" />
+			<ability id="10" name="ice" has="true" />
+			<ability id="11" name="volt" has="true" />
+			<ability id="12" name="earth" has="true" />
+			<ability id="13" name="dark" has="false" />
+			<ability id="14" name="star" has="false" />
+			<ability id="15" name="convert" has="false" />
+			<ability id="16" name="charge" has="false" />
+			<ability id="17" name="bigSpell" has="false" />
+			<ability id="18" name="wideSpell" has="false" />
+		</abilities>
+	</character>
+	<character id="2">
+		<name>Assassin</name>
+		<description>Lurks in the shadows until the time is right to strike</description>
+		<img>placeholder.png</img>
+		<icon>player.png</icon>
+		<statistics>
+			<attack>500</attack>
+			<intelligence>200</intelligence>
+			<speed>68</speed>
+			<finesse>59</finesse>
+			<defense>200</defense>
+			<mdefense>150</mdefense>
+			<maxHP>1500</maxHP>
+			<maxMP>600</maxMP>
+			<maxAP>6</maxAP>
+			<accuracy>40</accuracy>
+			<evasion>20</evasion>
+			<critChance>15</critChance>
+		</statistics>
+		<abilities>
+			<ability id="19" name="backstab" has="true" />
+			<ability id="20" name="anatomy" has="true" />
+			<ability id="21" name="study" has="true" />
+			<ability id="22" name="hide" has="true" />
+			<ability id="23" name="poison" has="false" />
+			<ability id="24" name="paralyze" has="false" />
+			<ability id="25" name="deadlyStrike" has="false" />
+			<ability id="26" name="sharpen" has="false" />
+			<ability id="27" name="killStreak" has="false" />
+		</abilities>
+	</character>
+	<character id="3">
+		<name>Medic</name>
+		<description>Heals allies</description>
+		<img>placeholder.png</img>
+		<icon>player.png</icon>
+		<statistics>
+			<attack>100</attack>
+			<intelligence>300</intelligence>
+			<speed>40</speed>
+			<finesse>18</finesse>
+			<defense>200</defense>
+			<mdefense>200</mdefense>
+			<maxHP>2000</maxHP>
+			<maxMP>900</maxMP>
+			<maxAP>9</maxAP>
+			<accuracy>0</accuracy>
+			<evasion>10</evasion>
+			<critChance>3</critChance>
+		</statistics>
+		<abilities>
+			<ability id="28" name="heal" has="true" />
+			<ability id="29" name="panacea" has="true" />
+			<ability id="30" name="toughen" has="true" />
+			<ability id="31" name="strengthen" has="true" />
+			<ability id="32" name="shield" has="false" />
+			<ability id="33" name="regen" has="false" />
+			<ability id="34" name="revive" has="false" />
+			<ability id="35" name="tranquilizer" has="false" />
+			<ability id="36" name="reverse" has="false" />
+		</abilities>
+	</character>
+</playerCharacters>

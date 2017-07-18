@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<encounters>
+	<encounter id="0">
+		<name>test</name>
+		<bgm>Ruler of the Deceased Moon.mp3</bgm>
+		<bg>chessboard.png</bg>
+		<enemies>
+			<characterid>0</characterid>
+			<characterid>1</characterid>
+			<characterid>2</characterid>
+			<characterid>0</characterid>
+			<characterid>1</characterid>
+			<characterid>2</characterid>
+			<characterid>0</characterid>
+			<characterid>1</characterid>
+			<characterid>2</characterid>
+		</enemies>
+	</encounter>
+	<encounter id="1">
+		<name>tutorial</name>
+		<bgm>Midnight Waltz.mp3</bgm>
+		<bg>forest.jpg</bg>
+		<enemies>
+			<characterid>3</characterid>
+		</enemies>
+	</encounter>
+</encounters>
