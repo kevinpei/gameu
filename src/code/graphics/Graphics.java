@@ -36,10 +36,10 @@ public class Graphics {
     }
     
 	/*
-	 * Returns an Image object containing the given game character's icon.
+	 * Returns an Image object of the given icon.
 	 */
-	public static Image getIcon(GameCharacter character) {
-		File iconFile = new File(FileManager.getResource("icon") + character.icon);
+	public static Image getIcon(String name) {
+		File iconFile = new File(FileManager.getResource("icon") + name);
 		return new Image(iconFile.toURI().toString());
 	}
 	

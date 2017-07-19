@@ -136,9 +136,9 @@ public abstract class GameCharacter {
 	public Group graphics;
 	
 	/*
-	 * An arraylist holding all the turn icons representing this character.
+	 * An arraylist holding all the turns this character will act on in the future.
 	 */
-	public ArrayList<Canvas> turnIcons;
+	public ArrayList<Integer> futureTurns = new ArrayList<Integer>();
 	
 	/*
 	 * All characters have an image to depict them. The file name is stored in 

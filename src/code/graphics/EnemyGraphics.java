@@ -63,6 +63,7 @@ public class EnemyGraphics implements Runnable{
 	public static void makeInvisible(Object e) {
 		((Enemy) e).getGraphics().getChildren().get(1).setVisible(false);
 		MessageBox.enemyStatusBox.setVisible(false);
+		MessageBox.updateTurnCounter();
 	}
 	
 	public static void makeVisible(Object e) {
@@ -70,6 +71,7 @@ public class EnemyGraphics implements Runnable{
 		MessageBox.enemyStatusBox.setVisible(true);
 		MessageBox.enemyStatusBox.toFront();
 		((Label)MessageBox.enemyStatusBox.getChildren().get(1)).setText(((Enemy)e).name);
+		MessageBox.highlightTurns((GameCharacter)e);
 	}
 	
 	/*

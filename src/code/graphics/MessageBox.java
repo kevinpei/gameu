@@ -52,7 +52,7 @@ public class MessageBox {
 	 * A static method to initialize the various static groups representing messageboxes.
 	 */
 	public static void initialize(AnchorPane graphics) {
-		enemyStatusBox = MessageBox.createMessageBox(8, 4, 
+		enemyStatusBox = MessageBox.createMessageBox(8, 28, 
     			graphics.getWidth() - 16, 150, graphics);
     	enemyStatusBox.setMouseTransparent(true);
     	enemyStatusBox.setVisible(false);
@@ -181,10 +181,11 @@ public class MessageBox {
 			GameCharacter character = TurnCounter.turnOrder[i];
 			Canvas icon = new Canvas(24, 24);
 			GraphicsContext gc = icon.getGraphicsContext2D();
-			gc.drawImage(Graphics.getIcon(character), 0, 0);
+			gc.drawImage(Graphics.getIcon(character.icon), 0, 0);
 			icon.setLayoutX(offset);
-			character.turnIcons.add(icon);
+			character.futureTurns.add(i);
 			offset += 28;
+			turnCounter.getChildren().add(icon);
 		}
 		turnCounter.toFront();
 		return turnCounter;
@@ -196,24 +197,36 @@ public class MessageBox {
 	 */
 	public static Group drawTurnCounter() {
 		TurnCounter.predictTurns(TurnCounter.getCharacters());
-		int offset = 0;
 		for (GameCharacter character : TurnCounter.turnOrder) {
-			character.turnIcons.clear();
+			character.futureTurns.clear();
 		}
 		for (int i = 0; i < 12; i++) {
 			GameCharacter character = TurnCounter.turnOrder[i];
 			Canvas icon = (Canvas) turnCounter.getChildren().get(i);
 			GraphicsContext gc = icon.getGraphicsContext2D();
 			gc.clearRect(0, 0, icon.getWidth(), icon.getHeight());
-			gc.drawImage(Graphics.getIcon(character), 0, 0);
-			icon.setLayoutX(offset);
-			character.turnIcons.add(icon);
-			offset += 28;
+			gc.drawImage(Graphics.getIcon(character.icon), 0, 0);
+			character.futureTurns.add(i);
 		}
 		turnCounter.toFront();
 		return turnCounter;
 	}
 	
+	/*
+	 * A function to highlight the selected game character's turns.
+	 */
+	public static void highlightTurns(GameCharacter character) {
+		for (Integer turn : character.futureTurns) {
+			Canvas turnIcon = (Canvas) turnCounter.getChildren().get(turn);
+			GraphicsContext gc = turnIcon.getGraphicsContext2D();
+			gc.clearRect(0, 0, 24, 24);
+			gc.drawImage(Graphics.getIcon("selected.png"), 0, 0);
+		}
+	}
+	
+	/*
+	 * Updates the appearance of the turnCounter.
+	 */
 	public static void updateTurnCounter() {
 		turnCounter = drawTurnCounter();
 		turnCounter.setVisible(false);
