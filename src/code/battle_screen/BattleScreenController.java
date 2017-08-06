@@ -20,7 +20,7 @@ import code.game_mechanics.TurnCounter;
 import code.game_mechanics.characters.Enemy;
 import code.game_mechanics.encounters.Encounter;
 import code.graphics.EnemyGraphics;
-import code.graphics.MessageBox;
+import code.graphics.MessageBoxGraphics;
 import code.music_player.MusicPlayer;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -80,14 +80,14 @@ public class BattleScreenController {
     
     @FXML private void hurtEnemy() {
     	Enemy testEnemy = mainApp.getEncounter().getEnemies().get(0);
-    	testEnemy.currPoints[0] -= 100;
+    	testEnemy.points.get("HP")[2] -= 100;
     	EnemyGraphics.hitEnemy(testEnemy, 100);
     	TurnCounter.endTurn();
     }
     
     public void hitEnemy() {
     	Enemy testEnemy = mainApp.getEncounter().getEnemies().get(0);
-    	testEnemy.currPoints[0] -= 100;
+    	testEnemy.points.get("HP")[2] -= 100;
     	EnemyGraphics.hitEnemy(testEnemy, 100);
     	TurnCounter.endTurn();
     }

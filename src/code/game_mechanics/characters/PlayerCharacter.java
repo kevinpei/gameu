@@ -4,14 +4,23 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Document;
 
+import code.constants.Constants;
 import code.game_mechanics.Ability;
 import code.xml.XMLReader;
 
 public class PlayerCharacter extends GameCharacter {
 	/*
 	 * An arraylist that stores all abilities the character can use.
+	 * It stores the ID numbers of each of those abilities.
 	 */
-	public ArrayList<Ability> abilities;
+	public ArrayList<Integer> abilities;
+	
+	/*
+	 * An integer tracking enemy aggression towards this character. A
+	 * character with higher aggression will be targeted more often.
+	 */
+	public int aggression;
+	
 	public PlayerCharacter(String name) {
 		super(name);
 	}
@@ -25,18 +34,19 @@ public class PlayerCharacter extends GameCharacter {
 	 * Speed is also set to 0.
 	 */
 	public void endCombat() {
-		for (String status : this.statusEffects.keySet()) {
-			this.statusEffects.get(status);
-		}
+		this.statusEffects.clear();
 		this.currSpeed = 0;
-		for (int i = 0; i < 2; i++) {
-			currPoints[i] = basePoints[i];
-			currStats[i] = baseStats[i];
+		for (String stat: Constants.stats) {
+			this.stats.get(stat)[1] = this.stats.get(stat)[0];
 		}
-		for (int j = 2; j < 6; j++) {
-			currStats[j] = baseStats[j];
+		for (String point: Constants.points) {
+			this.points.get(point)[1] = this.points.get(point)[0];
+			this.points.get(point)[2] = this.points.get(point)[0];
 		}
-		currPoints[2] = 0;
+		this.points.get("AP")[2] = 0;
+		for (String finesse: Constants.finesse) {
+			this.finesse.get(finesse)[1] = this.points.get(finesse)[0];
+		}
 		damageMultiplier = 1.0;
 	}
 }

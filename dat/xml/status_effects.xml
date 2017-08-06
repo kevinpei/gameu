@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<status_effects>
+	<status_effect id="0">
+		<max_magnitude>5</max_magnitude>
+		<type>Damage</type>
+		<!--Damage formula for damage status ailments is base_amount * magnitude ^ exponential_multiplier
+			This amount is then multiplied by a random number between 1 - variance and 1 + variance -->
+		<base_amount>100</base_amount>
+		<!--The exponential multiplier is the amount the magnitude is raised to before being multiplied by the base amount.
+			Higher exponential multipliers means that higher magnitudes become exponentially better.-->
+		<exponential_multiplier>1.25</exponential_multiplier>
+		<variance>0.2</variance>
+		<positive>
+			<name>Regen</name>
+			<description>
+			Gain HP every turn. Higher magnitudes increase the amount gained.
+			</description>
+		</positive>
+		<negative>
+			<name>Poison</name>
+			<description>
+			Lose HP every turn. Higher magnitudes increase the amount lost.
+			</description>
+		</negative>
+	</status_effect>
+</status_effects>

@@ -3,6 +3,7 @@ package code.game_mechanics.characters;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import code.constants.Constants;
 import code.game_mechanics.Ability;
 import code.game_mechanics.StatusEffect;
 import javafx.scene.Group;
@@ -16,24 +17,41 @@ public abstract class GameCharacter {
 	public String name;
 	public String description;
 	/*
-	 * The 6 base stats are as follows:
+	 * The 5 base stats are as follows:
 	 * Attack - Determines how much damage physical attacks do
 	 * Intelligence - Determines how much damage magical attacks do
 	 * Speed - Determines how often the character acts
-	 * Finesse - Determines accuracy, evasion, and crit rate
 	 * Defense - Determines how much physical damage is reduced
 	 * Magical Defense - Determines how much magical damage is reduced
+	 * 
+	 * The HashMap storing these stats has the stat name as the key and 
+	 * int arrays as the values. The first index corresponds to the base
+	 * value and the second index corresponds to the current value.
 	 */
-	public int[] baseStats;
-	public int[] currStats;
+	public HashMap<String, int[]> stats;
 	/*
 	 * The 3 types of points are as follows:
 	 * HP: When it reaches zero, the character dies
 	 * MP: Used for some abilities
 	 * AP: Used to execute actions, with larger actions requiring more AP
+	 * 
+	 * The HashMap storing these points has the points name as the key and 
+	 * int arrays as the values. The first index corresponds to the base max
+	 * value, the second index corresponds to the current max value, and the
+	 * third index corresponds to the current value.
 	 */
-	public int[] basePoints;
-	public int[] currPoints;
+	public HashMap<String, int[]> points;
+	/*
+	 * There are 3 finesse stats:
+	 * Accuracy: Used to determine the chance of landing an attack.
+	 * Evasion: Used to determine the chance of dodging an attack.
+	 * Crit Rate: When an attack hits, there is a chance of it being critical.
+	 * 
+	 * The HashMap storing these finesse stats has the finesse stat name as 
+	 * the key and int arrays as the values. The first index corresponds to 
+	 * the base value and the second index corresponds to the current value.
+	 */
+	public HashMap<String, int[]> finesse;
 	/*
 	 * currSpeed is used to track how far the current character is
 	 * in the turn order. When it reaches 1000 the character gets
@@ -41,34 +59,67 @@ public abstract class GameCharacter {
 	 */
 	public int currSpeed;
 	/*
-	 * There are 3 stats determined by finesse:
-	 * Accuracy: Used to determine the chance of landing an attack.
-	 * Evasion: Used to determine the chance of dodging an attack.
-	 * Crit Rate: When an attack hits, there is a chance of it being critical.
-	 */
-	public int[] finesseStats;
-	/*
 	 * A stat to multiply all incoming damage by. By default, it's
 	 * 1, but status effects like Breach and Shield can affect it.
 	 * Certain equipment also affects it.
 	 */
 	public double damageMultiplier;
 	/*
-	 * A hashmap of integers with string keys representing the different status ailments.
-	 * Each status ailment is a continuum ranging from -10 to 10, representing
-	 * either a positive status for positive numbers or a negative status for
-	 * negative numbers. It is a hashmap so that more status effects can be added as
-	 * necessary later. The continuum status effects are as follows:
+	 * A hashmap of integers with integer keys representing the different status ailments
+	 * with their ids as the keys and the values representing their magnitude.
+	 * Each status ailment is a continuum ranging from a negative number to a positive 
+	 * number, representing either a positive status for positive numbers or a negative 
+	 * status for negative numbers. It is a hashmap so that more status effects can be 
+	 * added as necessary later. The continuum status effects are as follows:
 	 * 
-	 * Poison -- Regen
-	 * Lethargy -- 
-	 * Fear -- Courage
-	 * Paralysis -- 
-	 * Slow -- Haste
-	 * Addle -- Clarity
+	 * Poison -- Regen		Poison causes HP loss every turn. Regen causes HP gain every turn.
 	 * 
+	 * Vulnerable -- Null	Vulnerable causes a large amount of damage when the afflicted is attacked.
+	 * 						Null prevents damage from the next attack.
+	 * 
+	 * Curse -- Bless		Curse causes damage whenever the afflicted deals damage. Bless heals
+	 * 						the afflicted whenever they deal damage.
+	 * 
+	 * Fear -- Courage		Fear decreases Attack and Intelligence, Courage increases Attack and
+	 * 						Intelligence.
+	 * 
+	 * Slow -- Haste		Slow decreases Speed and Evasion, Haste increases Speed and Evasion.
+	 * 
+	 * Addle -- Clarity		Addle causes MP loss every turn. Clarity causes MP gain every turn.
+	 * 
+	 * Breach -- Shield		Breach decreases Defense and Magic Defense. Shield increases Defense 
+	 * 						and Magic Defense. 
+	 * 
+	 * Unlucky -- Lucky		Unlucky decreases all stats and finesse stats by a small amount, lucky
+	 * 						increases all stats and finesse stats by a small amount.
+	 * 
+	 * Blind -- Eagle Eye	Blind decreases Accuracy and CritChance, Eagle Eye drastically
+	 * 						increases Accuracy and CritChance.
+	 * 
+	 * (Element) Brand -- (Element) Wall	Brand decreases resistance to a given element, Wall increases
+	 * 										resistance to a given element.
 	 */
-	public HashMap<String, Integer> statusEffects;
+	public HashMap<Integer, Integer> statusEffects;
+	
+	/*
+	 * A hashmap containing the character's resistances to various
+	 * status effects. If there is no resistance associated with the
+	 * given status effect, chance is assumed to be 100%. The key is
+	 * the id of the status effect, and the value is the resistance
+	 * to that status effect.
+	 * 
+	 * Status resistances are ints - they modify the chance for a
+	 * status ailment to land in the following way:
+	 * 0: Normal chance
+	 * 50: Half chance
+	 * 100+: No chance
+	 * -100: Double chance
+	 * 
+	 * Resistance is purely positive - it only affects the chance for
+	 * negative status effects to land, not positive status effects.
+	 */
+	public HashMap<Integer, Integer> statusResistances;
+	
 	/*
 	 * A hashmap containing various multipliers to apply to the
 	 * damage dealt to the character. The possible multipliers 
@@ -79,16 +130,14 @@ public abstract class GameCharacter {
 	public HashMap<String, Double> multipliers;
 	/*
 	 * A hashmap containing the character's resistances to various
-	 * elements. The 8 elements are as follows:
+	 * elements. The 6 elements are as follows:
 	 * 
-	 * Physical - Most basic attacks and abilities have this element.
-	 * Fire - Attacks using heat have this element.
-	 * Water - Attacks using water and ice have this element.
-	 * Air - Attacks using wind and lightning have this element.
-	 * Earth - Attacks using rocks and nature have this element.
-	 * Light - Attacks using life and light have this element.
-	 * Dark - Attacks using darkness and death have this element.
-	 * Non-Elemental - Very difficult to resist this element.
+	 * Physical - Attacks involving physical strength and materials use this element.
+	 * Mystic - Attacks involving raw magic use this element.
+	 * Fire - Attacks involving heat use this element.
+	 * Water - Attacks involving water and ice use this element.
+	 * Dark - Attacks involving darkness and death use this element.
+	 * Light - Attacks involving light and life use this element.
 	 * 
 	 * Elemental resistances are doubles - final damage is modified
 	 * by elemental resistance in the following way:
@@ -100,33 +149,21 @@ public abstract class GameCharacter {
 	 * -100: Double damage
 	 */
 	public HashMap<String, Double> elementalResistances;
-	/*
-	 * A hashmap containing the character's resistances to various
-	 * status effects. If there is no resistance associated with the
-	 * given status effect, chance is assumed to be 100%.
-	 * 
-	 * Status resistances are ints - they modify the chance for a
-	 * status ailment to land in the following way:
-	 * 0: Normal chance
-	 * 50: Half chance
-	 * 100+: No chance
-	 * -100: Double chance
-	 * 
-	 * It also modifies the magnitude of the status effect if it
-	 * does land in the following way:
-	 * 0: Normal magnitude
-	 * 50: Half magnitude
-	 * 100+: No Magnitude
-	 * -100: Double magnitude
-	 */
-	public HashMap<String, Integer> statusResistances;
+	
 	public GameCharacter(String name) {
 		this.name = name;
-		this.baseStats = new int[6];
-		this.basePoints = new int[3];
-		this.finesseStats = new int[3];
-		this.currStats = new int[6];
-		this.currPoints = new int[3];
+		this.stats = new HashMap<String, int[]>();
+		for (String stat: Constants.stats) {
+			this.stats.put(stat, new int[2]);
+		}
+		this.points = new HashMap<String, int[]>();
+		for (String point: Constants.points) {
+			this.points.put(point, new int[3]);
+		}
+		this.finesse = new HashMap<String, int[]>();
+		for (String finesse: Constants.finesse) {
+			this.finesse.put(finesse, new int[2]);
+		}
 	}
 	
 	/*
@@ -146,11 +183,6 @@ public abstract class GameCharacter {
 	 */
 	public String img;
 	
-	/*
-	 * All characters also have an icon to depict them in menus and the turn counter
-	 * and the like. The file name of the icon is stored in the icon String (e.g. player.png)
-	 */
-	public String icon;
 	/*
 	 * Every character has getter and setter functions for their img.
 	 */

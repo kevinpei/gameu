@@ -11,8 +11,11 @@ public class MusicPlayer {
 
 	private static MediaPlayer player;
 	
+	/*
+	 * A function to play and loop a chosen bgm track.
+	 */
 	public static void playBGM(String bgm) {
-    	File music = new File(FileManager.getResource("bgm") + bgm);
+    	File music = FileManager.getMusic(bgm);
     	if (music != null) {
     		player = new MediaPlayer(new Media(music.toURI().toString()));
     	    player.play();
@@ -25,6 +28,9 @@ public class MusicPlayer {
     	}
     }
 	
+	/*
+	 * A function to stop whichever bgm is currently playing.
+	 */
 	public static void stopBGM() {
 		try {
 			player.stop();	

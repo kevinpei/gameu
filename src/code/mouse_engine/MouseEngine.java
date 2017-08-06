@@ -3,7 +3,7 @@ package code.mouse_engine;
 import java.util.function.Consumer;
 
 import code.game_mechanics.characters.Enemy;
-import code.graphics.MessageBox;
+import code.graphics.MessageBoxGraphics;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -27,4 +27,13 @@ public class MouseEngine {
 		});
 	}
 	
+	/*
+	 * A function to set an action when the given element is clicked. It performs a
+	 * consumer action on the target given.
+	 */
+	public static void setOnMouseClick(Node element, Object target, Consumer<Object> action) {
+		element.setOnMouseClicked(evt -> {
+			action.accept(target);
+		});
+	}
 }

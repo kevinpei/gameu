@@ -13,9 +13,9 @@
 			<finesse>31</finesse>
 			<defense>500</defense>
 			<mdefense>600</mdefense>
-			<maxHP>2500</maxHP>
-			<maxMP>500</maxMP>
-			<maxAP>15</maxAP>
+			<HP>2500</HP>
+			<MP>500</MP>
+			<AP>9</AP>
 			<accuracy>10</accuracy>
 			<evasion>0</evasion>
 			<critChance>5</critChance>`
@@ -44,9 +44,9 @@
 			<finesse>31</finesse>
 			<defense>500</defense>
 			<mdefense>600</mdefense>
-			<maxHP>2500</maxHP>
-			<maxMP>500</maxMP>
-			<maxAP>15</maxAP>
+			<HP>2500</HP>
+			<MP>500</MP>
+			<AP>9</AP>
 			<accuracy>10</accuracy>
 			<evasion>0</evasion>
 			<critChance>5</critChance>
@@ -65,9 +65,9 @@
 			<finesse>31</finesse>
 			<defense>500</defense>
 			<mdefense>600</mdefense>
-			<maxHP>2500</maxHP>
-			<maxMP>500</maxMP>
-			<maxAP>15</maxAP>
+			<HP>2500</HP>
+			<MP>500</MP>
+			<AP>9</AP>
 			<accuracy>10</accuracy>
 			<evasion>0</evasion>
 			<critChance>5</critChance>
@@ -86,9 +86,9 @@
 			<finesse>31</finesse>
 			<defense>500</defense>
 			<mdefense>600</mdefense>
-			<maxHP>2500</maxHP>
-			<maxMP>500</maxMP>
-			<maxAP>15</maxAP>
+			<HP>2500</HP>
+			<MP>500</MP>
+			<AP>9</AP>
 			<accuracy>10</accuracy>
 			<evasion>0</evasion>
 			<critChance>5</critChance>

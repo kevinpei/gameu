@@ -8,7 +8,7 @@ import code.game_mechanics.characters.GameCharacter;
 import code.game_mechanics.characters.PlayerCharacter;
 import code.game_mechanics.encounters.Encounter;
 import code.game_mechanics.party.PlayerParty;
-import code.graphics.MessageBox;
+import code.graphics.MessageBoxGraphics;
 import javafx.scene.Group;
 
 public class TurnCounter {
@@ -35,12 +35,12 @@ public class TurnCounter {
 	/*
 	 * A function to get the next character that's acting. It adds each character's
 	 * current speed to their speed counter. When a character's speed counter reaches
-	 * 1000 
+	 * the speed threshold for acting (found in Constants), that character acts.
 	 */
 	public static GameCharacter getNextTurn() {
 		while (true) {
 			for (GameCharacter character : characters) {
-				character.currSpeed += character.currStats[2];
+				character.currSpeed += character.stats.get("speed")[1];
 				if (character.currSpeed >= Constants.speedThreshold) {
 					character.currSpeed = 0;
 					return character;
@@ -58,7 +58,7 @@ public class TurnCounter {
 	public static GameCharacter predictNextTurn() {
 		while (true) {
 			for (int i = 0; i < characters.size(); i++) {
-				projectedSpeed.set(i, projectedSpeed.get(i) + characters.get(i).currStats[2]);
+				projectedSpeed.set(i, projectedSpeed.get(i) + characters.get(i).stats.get("speed")[1]);
 				if (projectedSpeed.get(i) >= Constants.speedThreshold) {
 					projectedSpeed.set(i, 0);
 					return characters.get(i);
@@ -92,6 +92,6 @@ public class TurnCounter {
 		}
 		turnOrder[Constants.turnsAhead - 1] = getNextTurn();
 		turnCounter++;
-		MessageBox.updateTurnCounter();
+		MessageBoxGraphics.updateTurnCounter();
 	}
 }

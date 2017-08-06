@@ -14,11 +14,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import code.battle_screen.BattleScreenController;
+import code.file_management.FileManager;
 import code.game_mechanics.TurnCounter;
 import code.game_mechanics.characters.Enemy;
 import code.game_mechanics.encounters.Encounter;
 import code.graphics.EnemyGraphics;
-import code.graphics.MessageBox;
+import code.graphics.MessageBoxGraphics;
 import code.graphics.PlayerGraphics;
 import code.music_player.MusicPlayer;
 import code.xml.XMLReader;
@@ -96,12 +97,14 @@ public class BattleScreen extends Application{
            /* int alert = controller.showAlert();
             while (alert == 0)
             	alert = controller.showAlert();*/
+            FileManager.setCSS("styles.css", scene);
+            System.out.println(scene.getStylesheets());
             TurnCounter.initialize(encounter);
-            MessageBox.initialize(controller.getGraphics());
+            MessageBoxGraphics.initialize(controller.getGraphics());
             
             EnemyGraphics.drawEncounter(this.encounter, controller.getGraphics());
             PlayerGraphics.drawPlayerCharacters(controller.getGraphics());
-            ((Group) MessageBox.playerCommandMenu.getChildren().get(0)).getChildren().get(1).setOnMouseClicked(e -> {
+            MessageBoxGraphics.playerCommandMenu.graphics.get(0).setOnMouseClicked(e -> {
             	controller.hitEnemy();
             });
         } catch (IOException e) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import code.constants.Constants;
+import code.file_management.FileManager;
 import code.game_mechanics.TurnCounter;
 import code.game_mechanics.characters.Enemy;
 import code.game_mechanics.characters.GameCharacter;
@@ -29,10 +30,11 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-public class EnemyGraphics implements Runnable{
+public class EnemyGraphics{
 	
 	/*
 	 * Draws a new encounter. Draws all the enemies, their names, their health bars, and
@@ -55,24 +57,10 @@ public class EnemyGraphics implements Runnable{
     			leftOffset += e.getWidth() * 7 / 8;
     		}
     		MouseEngine.setOnMouseOver(e.getGraphics().getChildren().get(0), e, 
-    				EnemyGraphics::makeVisible, EnemyGraphics::makeInvisible);
+    				MessageBoxGraphics::mouseOverCharacter, MessageBoxGraphics::stopMouseOverCharacter);
     	}
     	Graphics.drawBackground(encounter.bg, graphics);
     }
-	
-	public static void makeInvisible(Object e) {
-		((Enemy) e).getGraphics().getChildren().get(1).setVisible(false);
-		MessageBox.enemyStatusBox.setVisible(false);
-		MessageBox.updateTurnCounter();
-	}
-	
-	public static void makeVisible(Object e) {
-		((Enemy) e).getGraphics().getChildren().get(1).setVisible(true);
-		MessageBox.enemyStatusBox.setVisible(true);
-		MessageBox.enemyStatusBox.toFront();
-		((Label)MessageBox.enemyStatusBox.getChildren().get(1)).setText(((Enemy)e).name);
-		MessageBox.highlightTurns((GameCharacter)e);
-	}
 	
 	/*
 	 * Function to draw a new enemy. It creates a group and adds to it a canvas containing
@@ -82,7 +70,7 @@ public class EnemyGraphics implements Runnable{
     public static Group drawNewEnemy(Enemy character, int offset, AnchorPane graphics) {
     	Group enemyGraphics = new Group();
     	//Retrieve the img file of the enemy and set its scale and position on the canvas.
-    	Image enemyIMG = Graphics.getImage(character);
+    	Image enemyIMG = FileManager.getImage(character);
     	double scale = character.getWidth() / enemyIMG.getWidth();
     	double Xpos = ((graphics.getWidth() - enemyIMG.getWidth() * scale)/2) + offset;
     	double Ypos = ((graphics.getHeight() - enemyIMG.getHeight() * scale)/2.5) - Math.abs(offset / 10);
@@ -92,7 +80,7 @@ public class EnemyGraphics implements Runnable{
     	Graphics.addToGroup(enemyGraphics, IMGcanvas, Xpos, Ypos);
     	//Create the canvas that contains the enemy health bar and add it to the group.
     	Canvas HealthBarCanvas = new Canvas(200, Constants.barHeight);
-    	Graphics.drawBar(HealthBarCanvas, Color.RED, character.currPoints[0], character.basePoints[0]);
+    	Graphics.drawBar(HealthBarCanvas, Color.RED, character.points.get("HP")[2], character.points.get("HP")[1]);
     	HealthBarCanvas.setVisible(false);
     	Graphics.addToGroup(enemyGraphics, HealthBarCanvas, Xpos + (enemyIMG.getWidth() * scale / 2)
     			- HealthBarCanvas.getWidth() / 2, Ypos + enemyIMG.getHeight() * scale * 1.02);
@@ -108,41 +96,22 @@ public class EnemyGraphics implements Runnable{
      */
     public static void hitEnemy(Enemy enemy, int amount) {
     	Canvas healthbar = (Canvas) enemy.getGraphics().getChildren().get(1);
-    	Graphics.drawBar(healthbar, Color.RED, enemy.currPoints[0], enemy.basePoints[0]);
+    	Graphics.drawBar(healthbar, Color.RED, enemy.points.get("HP")[2], enemy.points.get("HP")[1]);
     	healthbar.setVisible(true);
     	Canvas enemyGraphics = (Canvas) enemy.getGraphics().getChildren().get(0);
     	//Creates a new animation timeline
-    	Timeline timeline = new Timeline();
     	//Sets the enemy graphics to blink for 0.8 seconds.
-    	Label damage = new Label(-1 * amount + "");
-    	damage.setTextFill(Color.BLACK);
-    	damage.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(4), Insets.EMPTY)));
-    	damage.setScaleX(5);
-    	damage.setScaleY(5);
+    	Text damage = Animations.dealDamage(amount);
     	enemy.getGraphics().getChildren().add(damage);
-    	damage.setLayoutX(enemy.getGraphics().getChildren().get(1).getLayoutX() + 100);
-    	damage.setLayoutY(enemy.getGraphics().getChildren().get(0).getLayoutY() + 150);
-    	for (int i = 0; i < 8; i++) {
-    		if (i%2 == 0) {
-    			timeline.getKeyFrames().addAll(new KeyFrame(new Duration(i * 100), 
-    					new KeyValue(enemyGraphics.visibleProperty(), false)));
-    		} else {
-    			timeline.getKeyFrames().addAll(new KeyFrame(new Duration(i * 100), 
-    					new KeyValue(enemyGraphics.visibleProperty(), true)));
-    		}
-    	}
-    	//Hides the healthbar again after 1.5 seconds since being hit.
-    	timeline.getKeyFrames().addAll(new KeyFrame(new Duration(1500), 
-    			new KeyValue(healthbar.visibleProperty(), false)));
-    	timeline.getKeyFrames().addAll(new KeyFrame(new Duration(1200), 
-    			new KeyValue(damage.visibleProperty(), false)));
-    	timeline.play();
+    	damage.setLayoutX(enemy.getGraphics().getChildren().get(1).getLayoutX() + 
+    			0.5 * ((Canvas) enemy.getGraphics().getChildren().get(0)).getWidth() -
+    			5 * ((int)Math.log10(Math.abs(amount)) + 1));
+    	damage.setLayoutY(enemy.getGraphics().getChildren().get(0).getLayoutY() + 
+    			0.5 * ((Canvas) enemy.getGraphics().getChildren().get(0)).getHeight() - 20);
+    	Animations.flashObject(enemyGraphics, 4);
+    	Animations.hideObject(damage, 1200);
+    	Animations.hideObject(healthbar, 1500);
+    	Animations.playAnimations();
     }
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }

@@ -1,13 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <abilities>
 	<ability id="0">
-		<name>fireball</name>
-		<power>80</power>
-		<accuracy>100</accuracy>
-		<critchance>5</critchance>
+		<name>Test Attack</name>
+		<description>
+		Test attack to test things out.
+		</description>
+		<type>Stat-Based</type>
+		<element>Physical</element>
+		<attackStats>attack</attackStats>
+		<attackMultipliers>2</attackMultipliers>
+		<defenseStats>defense</defenseStats>
+		<defenseMultipliers>1</defenseMultipliers>
+		<hits>2</hits>
+		<variance>0.15</variance>
+		<accuracy>90</accuracy>
+		<critChance>5</critChance>
+		<HP>0</HP>
+		<MP>0</MP>
+		<AP>1</AP>
 	</ability>
 	<ability id="1">
+		<name>Test Spell</name>
+		<description>
+		Test spell to test things out.
+		</description>
+		<type>Multiplier</type>
+		<element>Mystic</element>
+		<power>100</power>
+		<attackStats>intelligence</attackStats>
+		<attackMultipliers>0.3</attackMultipliers>
+		<defenseStats>mdefense</defenseStats>
+		<defenseMultipliers>0.1</defenseMultipliers>
+		<hits>1</hits>
+		<variance>0.2</variance>
+		<accuracy>90</accuracy>
+		<critChance>5</critChance>
+		<HP>0</HP>
+		<MP>50</MP>
+		<AP>1</AP>
+	</ability>
+	<ability id="2">
+		<name>Test Fixed Damage Attack</name>
+		<description>
+		Test attack to test things out.
+		</description>
+		<type>Fixed</type>
+		<element>None</element>
+		<power>500</power>
+		<hits>1</hits>
+		<variance>0.1</variance>
+		<accuracy>90</accuracy>
+		<critChance>5</critChance>
+		<HP>50</HP>
+		<MP>10</MP>
+		<AP>1</AP>
+	</ability>
+	<ability id="3">
+		<name>Test Status Attack</name>
+		<description>
+		Test attack to test a stat-based attack that also inflicts Poison.
+		</description>
+		<type>Stat-Based</type>
+		<element>Water</element>
+		<primaryAttackStat>attack</primaryAttackStat>
+		<primaryAttackMultiplier>2</primaryAttackMultiplier>
+		<primaryDefenseStat>defense</primaryDefenseStat>
+		<primaryDefenseMultiplier>1</primaryDefenseStat>
+		<hits>2</hits>
+		<status>Poison</status>
+		<statusChance>50</statusChance>
+		<statusMagnitude>1</statusMagnitude>
+		<variance>0.1</variance>
+		<accuracy>90</accuracy>
+		<critChance>5</critChance>
+		<HP>50</HP>
+		<MP>10</MP>
+		<AP>1</AP>
+	</ability>
+	<ability id="100">
+		<name>Sickening Curse</name>
+		<description>
+		A curse to sicken the body.\n
+		Inflicts Poison on all enemies.\n
+		If an enemy is already poisoned, it inflicts Blind too.\n
+		If an enemy is already poisoned and blind, it inflicts 
+		</description>
+		<element>Physical</element>
+		<power>30</power>
+		<accuracy>90</accuracy>
+		<critChance>5</critChance>
+	</ability>
+	<ability id="2">
 		<name>tutorial</name>
-		
+	
 	</ability>
 </abilities>

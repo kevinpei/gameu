@@ -9,12 +9,11 @@
 			<attack>300</attack>
 			<intelligence>350</intelligence>
 			<speed>38</speed>
-			<finesse>31</finesse>
 			<defense>500</defense>
 			<mdefense>600</mdefense>
-			<maxHP>2500</maxHP>
-			<maxMP>500</maxMP>
-			<maxAP>9</maxAP>
+			<HP>2500</HP>
+			<MP>500</MP>
+			<AP>9</AP>
 			<accuracy>10</accuracy>
 			<evasion>0</evasion>
 			<critChance>5</critChance>
@@ -39,12 +38,11 @@
 			<attack>200</attack>
 			<intelligence>600</intelligence>
 			<speed>28</speed>
-			<finesse>38</finesse>
 			<defense>150</defense>
 			<mdefense>450</mdefense>
-			<maxHP>1800</maxHP>
-			<maxMP>800</maxMP>
-			<maxAP>12</maxAP>
+			<HP>1800</HP>
+			<MP>800</MP>
+			<AP>12</AP>
 			<accuracy>20</accuracy>
 			<evasion>0</evasion>
 			<critChance>8</critChance>
@@ -71,12 +69,11 @@
 			<attack>500</attack>
 			<intelligence>200</intelligence>
 			<speed>68</speed>
-			<finesse>59</finesse>
 			<defense>200</defense>
 			<mdefense>150</mdefense>
-			<maxHP>1500</maxHP>
-			<maxMP>600</maxMP>
-			<maxAP>6</maxAP>
+			<HP>1800</HP>
+			<MP>800</MP>
+			<AP>12</AP>
 			<accuracy>40</accuracy>
 			<evasion>20</evasion>
 			<critChance>15</critChance>
@@ -102,12 +99,11 @@
 			<attack>100</attack>
 			<intelligence>300</intelligence>
 			<speed>40</speed>
-			<finesse>18</finesse>
 			<defense>200</defense>
 			<mdefense>200</mdefense>
-			<maxHP>2000</maxHP>
-			<maxMP>900</maxMP>
-			<maxAP>9</maxAP>
+			<HP>1800</HP>
+			<MP>800</MP>
+			<AP>12</AP>
 			<accuracy>0</accuracy>
 			<evasion>10</evasion>
 			<critChance>3</critChance>

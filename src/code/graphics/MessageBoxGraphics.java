@@ -6,12 +6,16 @@ import java.util.function.Consumer;
 import code.battle_screen.BattleScreen;
 import code.battle_screen.BattleScreenController;
 import code.constants.Constants;
+import code.file_management.FileManager;
 import code.game_mechanics.TurnCounter;
 import code.game_mechanics.characters.Enemy;
 import code.game_mechanics.characters.GameCharacter;
 import code.game_mechanics.characters.PlayerCharacter;
 import code.game_mechanics.encounters.Encounter;
 import code.game_mechanics.party.PlayerParty;
+import code.graphics.message_box.Menu;
+import code.graphics.message_box.MessageBox;
+import code.graphics.message_box.TextBox;
 import code.mouse_engine.MouseEngine;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -35,45 +39,40 @@ import javafx.scene.text.Font;
  * This class will allow for the creation of messageboxes used for stuff like getting the
  * names of enemies and the menu for selecting things.
  */
-public class MessageBox {
+public class MessageBoxGraphics {
 	
 	/*
 	 * Static groups representing three message boxes used for every fight: a box showing 
 	 * the enemy status, a box containing the available commands, a box containing a
 	 * list of abilities or similar, and a box for canceling an action.
 	 */
-	public static Group enemyStatusBox;
-	public static Group playerCommandMenu;
-	public static Group playerListAbilities;
-	public static Group cancelBox;
-	public static Group turnCounter;
+	public static TextBox statusBox;
+	public static Menu playerCommandMenu;
+	public static Menu playerListAbilities;
+	public static Menu cancelBox;
+	public static MessageBox turnCounter;
 	
 	/*
 	 * A static method to initialize the various static groups representing messageboxes.
 	 */
 	public static void initialize(AnchorPane graphics) {
-		enemyStatusBox = MessageBox.createMessageBox(8, 28, 
-    			graphics.getWidth() - 16, 150, graphics);
-    	enemyStatusBox.setMouseTransparent(true);
-    	enemyStatusBox.setVisible(false);
-    	playerCommandMenu = new Group();
-    	playerCommandMenu.setLayoutX(graphics.getWidth() - 200);
-    	playerCommandMenu.setLayoutY(graphics.getHeight() - Constants.playerMessageHeight - 8);
-    	playerCommandMenu.getChildren().add(MessageBox.makePlayerActionMenu());
+		statusBox = new TextBox(8, 8, 
+    			graphics.getWidth() - 16, Constants.statusBoxHeight);
+    	statusBox.messageBox.setMouseTransparent(true);
+    	statusBox.setVisible(true);
+    	playerCommandMenu = new Menu(graphics.getWidth() - 200, graphics.getHeight() - 
+    			Constants.playerMessageHeight - 8, Constants.menuWidth, Constants.playerMessageHeight);
+    	MessageBoxGraphics.initializePlayerActionMenu();
     	//playerCommandMenu.setVisible(false);
-    	playerListAbilities = MessageBox.createBorderedBox(graphics.getWidth() - 16, Constants.playerMessageHeight);
-    	playerListAbilities.setLayoutX(8);
-    	playerListAbilities.setLayoutY(graphics.getHeight() - Constants.playerMessageHeight - 8);
-    	playerListAbilities.toFront();
-    	playerListAbilities.setVisible(false);
-    	cancelBox = MessageBox.createBorderedBox(192, Constants.playerMessageHeight);
-    	cancelBox.setLayoutX(graphics.getWidth() - 200);
-    	cancelBox.setLayoutY(graphics.getHeight() - Constants.playerMessageHeight - 8);
-    	cancelBox.getChildren().add(MessageBox.createButton(12, 75, 168, 42, "Cancel"));
-    	cancelBox.toFront();
-    	cancelBox.setVisible(false);
-    	turnCounter = MessageBox.initializeTurnCounter();
-    	graphics.getChildren().addAll(enemyStatusBox, playerCommandMenu, playerListAbilities, cancelBox, turnCounter);
+    	playerListAbilities = new Menu(8, graphics.getHeight() - Constants.playerMessageHeight - 8, 
+    			graphics.getWidth() - 20 - Constants.menuWidth, Constants.playerMessageHeight);
+    	cancelBox = new Menu(graphics.getWidth() - 200, graphics.getHeight() - 
+    			Constants.playerMessageHeight - 8, Constants.menuWidth, Constants.playerMessageHeight);
+    	cancelBox.addGraphic(MessageBoxGraphics.createButton(12, Constants.playerMessageHeight / 2 - 21, 
+    			Constants.menuWidth - 24, 42, "Cancel"));
+    	MessageBoxGraphics.initializeTurnCounter();
+    	graphics.getChildren().addAll(statusBox.messageBox, playerCommandMenu.messageBox, 
+    			playerListAbilities.messageBox, cancelBox.messageBox, turnCounter.messageBox);
 	}
 	
 	/*
@@ -81,19 +80,10 @@ public class MessageBox {
 	 * to the mBox group. Initialize will only ever be called once. Other function calls
 	 * will merely add more canvases or change the label's text.
 	 */
-	public static Group createMessageBox(double xPos, double yPos, double width, double height, Region parent) {
+	public static Group createMessageBox(double xPos, double yPos, double width, double height) {
 		Group messageBox = createBorderedBox(width, height);
 		messageBox.setLayoutX(xPos);
 		messageBox.setLayoutY(yPos);
-		Label text = new Label();
-		text.setMinSize(width - 16, height - 16);
-		text.setLayoutX(8);
-		text.setLayoutY(8);
-		text.setTextFill(Color.WHITE);
-		text.setFont(new Font(24));
-		text.setAlignment(Pos.TOP_CENTER);
-		messageBox.getChildren().add(text);
-		messageBox.toFront();
 		return messageBox;
 	}
 	
@@ -127,7 +117,7 @@ public class MessageBox {
 		Label buttonText = Graphics.drawLabel(10, 0, Color.WHITE, 24, text);
 		buttonText.setMinWidth(width);
 		buttonText.setMinHeight(height);
-		Canvas whiteBorder = MessageBox.createBorder(buttonText, Color.CRIMSON);
+		Canvas whiteBorder = MessageBoxGraphics.createBorder(buttonText, Color.CRIMSON);
 		whiteBorder.setVisible(false);
 		button.getChildren().addAll(buttonText, whiteBorder);
 		MouseEngine.setOnMouseOver(buttonText, whiteBorder, Graphics::makeVisible, Graphics::makeInvisible);
@@ -157,15 +147,33 @@ public class MessageBox {
 	 * Creates a menu containing the four player commands: fight, ability, defend,
 	 * and run.
 	 */
-	public static Group makePlayerActionMenu() {
-		Group menu = MessageBox.createBorderedBox(192, Constants.playerMessageHeight);
-		Group action = MessageBox.createButton(12, 12, 168, (Constants.playerMessageHeight - 24)/4, "Action");
-		Group items = MessageBox.createButton(12, 12 + (Constants.playerMessageHeight - 24)/4, 168, (Constants.playerMessageHeight - 24)/4, "Items");
-		Group endTurn = MessageBox.createButton(12, 12 + (Constants.playerMessageHeight - 24)/2, 168, (Constants.playerMessageHeight - 24)/4, "End Turn");
-		Group run = MessageBox.createButton(12, 12 + 3*(Constants.playerMessageHeight - 24)/4, 168, (Constants.playerMessageHeight - 24)/4, "Run");
-		menu.getChildren().addAll(action, items, endTurn, run);
-		menu.toFront();
-		return menu;
+	public static void initializePlayerActionMenu() {
+		Group action = MessageBoxGraphics.createButton(12, 12, Constants.menuWidth - 24, 
+				(Constants.playerMessageHeight - 24)/4, "Action");
+		Group items = MessageBoxGraphics.createButton(12, 12 + (Constants.playerMessageHeight - 24)/4, 
+				Constants.menuWidth - 24, (Constants.playerMessageHeight - 24)/4, "Items");
+		Group endTurn = MessageBoxGraphics.createButton(12, 12 + (Constants.playerMessageHeight - 24)/2, 
+				Constants.menuWidth - 24, (Constants.playerMessageHeight - 24)/4, "End Turn");
+		Group run = MessageBoxGraphics.createButton(12, 12 + 3*(Constants.playerMessageHeight - 24)/4, 
+				Constants.menuWidth - 24, (Constants.playerMessageHeight - 24)/4, "Run");
+		
+		playerCommandMenu.addButton(action);
+		playerCommandMenu.addButton(items);
+		playerCommandMenu.addButton(endTurn);
+		playerCommandMenu.addButton(run);
+	}
+	
+	public static void updateActionMenu(PlayerCharacter character) {
+		playerListAbilities.graphics.clear();
+		int i = 0;
+		while (i < character.abilities.size()) {
+			if (i%2 == 0) {
+				
+			} else {
+				
+			}
+			i++;
+		}
 	}
 	
 	/*
@@ -173,43 +181,51 @@ public class MessageBox {
 	 * and creates instances of the group for the turn counter and the canvases
 	 * for the turn icons.
 	 */
-	public static Group initializeTurnCounter() {
+	public static void initializeTurnCounter() {
 		TurnCounter.predictTurns(TurnCounter.getCharacters());
-		turnCounter = new Group();
+		Group turnGraphic = new Group();
+		turnGraphic.toFront();
+		turnGraphic.setLayoutY(Constants.statusBoxHeight + 10);
+		turnGraphic.setLayoutX(2);
+		turnCounter = new MessageBox(turnGraphic);
 		int offset = 0;
 		for (int i = 0; i < 12; i++) {
 			GameCharacter character = TurnCounter.turnOrder[i];
 			Canvas icon = new Canvas(24, 24);
 			GraphicsContext gc = icon.getGraphicsContext2D();
-			gc.drawImage(Graphics.getIcon(character.icon), 0, 0);
+			if (character instanceof PlayerCharacter) {
+				gc.drawImage(FileManager.getIcon(Constants.playerIcon), 0, 0);
+			} else {
+				gc.drawImage(FileManager.getIcon(Constants.enemyIcon), 0, 0);
+			}
 			icon.setLayoutX(offset);
 			character.futureTurns.add(i);
 			offset += 28;
-			turnCounter.getChildren().add(icon);
+			turnCounter.addGraphic(icon);
 		}
-		turnCounter.toFront();
-		return turnCounter;
 	}
 	
 	/*
 	 * Creates the turn counter showing the next 12 turns. It draws the icons of
 	 * the characters that are going next.
 	 */
-	public static Group drawTurnCounter() {
+	public static void updateTurnCounter() {
 		TurnCounter.predictTurns(TurnCounter.getCharacters());
 		for (GameCharacter character : TurnCounter.turnOrder) {
 			character.futureTurns.clear();
 		}
 		for (int i = 0; i < 12; i++) {
 			GameCharacter character = TurnCounter.turnOrder[i];
-			Canvas icon = (Canvas) turnCounter.getChildren().get(i);
+			Canvas icon = (Canvas) turnCounter.graphics.get(i);
 			GraphicsContext gc = icon.getGraphicsContext2D();
 			gc.clearRect(0, 0, icon.getWidth(), icon.getHeight());
-			gc.drawImage(Graphics.getIcon(character.icon), 0, 0);
+			if (character instanceof PlayerCharacter) {
+				gc.drawImage(FileManager.getIcon(Constants.playerIcon), 0, 0);
+			} else {
+				gc.drawImage(FileManager.getIcon(Constants.enemyIcon), 0, 0);
+			}
 			character.futureTurns.add(i);
 		}
-		turnCounter.toFront();
-		return turnCounter;
 	}
 	
 	/*
@@ -217,19 +233,44 @@ public class MessageBox {
 	 */
 	public static void highlightTurns(GameCharacter character) {
 		for (Integer turn : character.futureTurns) {
-			Canvas turnIcon = (Canvas) turnCounter.getChildren().get(turn);
+			Canvas turnIcon = (Canvas) turnCounter.graphics.get(turn);
 			GraphicsContext gc = turnIcon.getGraphicsContext2D();
 			gc.clearRect(0, 0, 24, 24);
-			gc.drawImage(Graphics.getIcon("selected.png"), 0, 0);
+			gc.drawImage(FileManager.getIcon(Constants.selectedIcon), 0, 0);
 		}
 	}
 	
 	/*
-	 * Updates the appearance of the turnCounter.
+	 * A function to hide the status box and health bar after a character is no
+	 * longer moused over. The turn counter is also reset so no icons are highlighted.
 	 */
-	public static void updateTurnCounter() {
-		turnCounter = drawTurnCounter();
-		turnCounter.setVisible(false);
-		turnCounter.setVisible(true);
+	public static void stopMouseOverCharacter(Object character) {
+		if (character instanceof Enemy) {
+			((Enemy) character).getGraphics().getChildren().get(1).setVisible(false);
+		}
+		statusBox.text.setText("");
+		MessageBoxGraphics.updateTurnCounter();
+	}
+	
+	/*
+	 * A function to change the status box whenever a character is moused over.
+	 * If the character is an enemy, their healthbar is also displayed. The turn
+	 * counter is also highlighted to indicated which turns they have.
+	 */
+	public static void mouseOverCharacter(Object character) {
+		if (character instanceof Enemy) {
+			((Enemy) character).getGraphics().getChildren().get(1).setVisible(true);
+		}
+		MessageBoxGraphics.statusBox.setVisible(true);
+		MessageBoxGraphics.statusBox.toFront();
+		MessageBoxGraphics.statusBox.text.setText(((GameCharacter)character).name);
+		MessageBoxGraphics.highlightTurns((GameCharacter)character);
+	}
+	
+	public static void showActionMenu(Object character) {
+		MessageBoxGraphics.updateActionMenu((PlayerCharacter)character);
+		playerCommandMenu.setVisible(false);
+		playerListAbilities.setVisible(true);
+		cancelBox.setVisible(true);
 	}
 }

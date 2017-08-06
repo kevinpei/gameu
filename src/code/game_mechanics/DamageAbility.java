@@ -11,17 +11,32 @@ import code.game_mechanics.characters.GameCharacter;
  * by each specific damage ability.
  */
 public abstract class DamageAbility extends Ability{
+
 	/*
-	 * Power measures the base power of the ability. It will be used in the
-	 * damage calculation for the ability.
+	 * Additional multipliers are any context-specific multipliers that occur, such as
+	 * double damage if the ability is effective against humans.
 	 */
-	int power;
+	public double additionalMultipliers;
+	
+	/*
+	 * Variance is how much the final number can fluctuate in value from its base amount.
+	 */
+	public double variance;
+	
+	/*
+	 * Hits is how many times the ability hits the enemy.
+	 */
+	public int hits;
 	/*
 	 * Abilities have their own separate accuracy, crit rate, and element.
 	 */
-	int accuracy;
-	int critrate;
-	int element;
+	public int accuracy;
+	public int critChance;
+	public String element;
+	
+	public int ailmentID;
+	public int ailmentChance;
+	public int ailmentMagnitude;
 	/*
 	 * Damage abilities may also inflict status ailments. The ailments they
 	 * can inflict are stored in a hashmap, with the status effect as the
@@ -32,33 +47,40 @@ public abstract class DamageAbility extends Ability{
 	 * An abstract method describing the damage formula for the given
 	 * ability.
 	 */
-	public abstract void damageFormula(GameCharacter user, GameCharacter target);
+	public abstract int damageFormula(GameCharacter user, GameCharacter target);
 	
 	/*
 	 * A method to try to inflict a status ailment on a target.
 	 */
-	public boolean statusInfliction(String name, Integer magnitude, Integer chance,
-			GameCharacter target) {
+	public boolean statusInfliction(GameCharacter target) {
 		/*
 		 * Pick a random number between 0 and 1 and see if the 
-		 * resulting number is greater than (100 - %chance). If 
-		 * so, then the status ailment lands.
+		 * resulting number is greater than (100 - %chance) multiplied
+		 * by (100 - resistance / 100). If so, then the status ailment 
+		 * lands.
+		 * 
+		 * This number is also affected by the target's resistance
+		 * to the ailment, with larger resistances lowering the
+		 * chance.
 		 * 
 		 * Ailment accuracy is unaffected by things like evasion,
 		 * only the chance of landing it.
 		 */
-		if (Math.random() > (100.0 - (double)chance) / 100.0) {
-			/*
-			 * If the target already has the status ailment, then its
-			 * magnitude is increased by the magnitude of the status
-			 * ailment that would've been inflicted.
-			 */
-			if (target.statusEffects.containsKey(name))
-				target.statusEffects.put(name, target.statusEffects.get(name) + magnitude);
-			else
-				target.statusEffects.put(name, magnitude);
+		if (Math.random() > ((100.0 - (double)ailmentChance) / 100.0) * 
+				(100.0 - (double)target.statusResistances.get(ailmentID) / 100.0)) {
 			return true;
 		}
 		return false;
+	}
+	
+	/*
+	 * A function to calculate the total multiplier to damage this ability receives. It
+	 * counts context-specific multipliers, elemental resistance, and variance.
+	 */
+	public double totalMultipliers(GameCharacter user, GameCharacter target) {
+		double multipliers = additionalMultipliers;
+		multipliers *= (((double)target.elementalResistances.get(element) + 100.0) / 100.0);
+		multipliers *= (Math.random() * 2 * variance + 1.0 - variance);
+		return multipliers;
 	}
 }

@@ -5,9 +5,9 @@ package code.game_mechanics;
  * description , HP cost, MP cost, and AP cost.
  */
 public abstract class Ability {
-	String name;
-	String description;
-	public int HPcost;
-	public int MPcost;
-	public int APcost;
+	public String name;
+	public String description;
+	public int HP;
+	public int MP;
+	public int AP;
 }

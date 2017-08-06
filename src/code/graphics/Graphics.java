@@ -21,28 +21,6 @@ import javafx.scene.text.Font;
 
 public class Graphics {
 	
-	/*
-	 * Returns an Image object given a game character. It gets the appropriate file depending
-	 * on the type of character.
-	 */
-	public static Image getImage(GameCharacter character) {
-    	File imgFile = null;
-    	if (character instanceof Enemy) {
-    		imgFile = new File(FileManager.getResource("img") + "enemy\\" + character.getIMG());
-    	} else if (character instanceof PlayerCharacter) {
-    		imgFile = new File(FileManager.getResource("img") + "player\\" + character.getIMG());
-    	}
-    	return new Image(imgFile.toURI().toString());
-    }
-    
-	/*
-	 * Returns an Image object of the given icon.
-	 */
-	public static Image getIcon(String name) {
-		File iconFile = new File(FileManager.getResource("icon") + name);
-		return new Image(iconFile.toURI().toString());
-	}
-	
     /*
      * A function to add a given node to a given group at the given x and y position. Used
      * for graphical purposes.
@@ -58,8 +36,7 @@ public class Graphics {
      * scaled up and centered appropriately so that it fits.
      */
     public static void drawBackground(String bg, AnchorPane graphics) {
-    	File bgFile = new File(FileManager.getResource("bg") + bg);
-    	Image bgIMG = new Image(bgFile.toURI().toString());
+    	Image bgIMG = FileManager.getBackground(bg);
     	Canvas background = new Canvas(graphics.getWidth(), graphics.getHeight());
     	GraphicsContext gc = background.getGraphicsContext2D();
     	if (graphics.getWidth() / bgIMG.getWidth() > graphics.getHeight() / bgIMG.getHeight()) {
