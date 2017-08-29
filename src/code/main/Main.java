@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 
 import code.battle_screen.BattleScreen;
 import code.file_management.FileManager;
+import code.game_mechanics.Library;
 import code.game_mechanics.characters.PlayerCharacter;
 import code.game_mechanics.party.PlayerParty;
 import code.xml.XMLReader;
@@ -27,6 +28,13 @@ public class Main extends Application{
 	}
 	
 	public static void main(String[] args) {
+		Library.initialize();
+		for (int key : Library.abilities.keySet()) {
+			System.out.println(Library.abilities.get(key).name);
+		}
+		for (int key : Library.statusEffects.keySet()) {
+			System.out.println(Library.statusEffects.get(key).name);
+		}
 		initializeParty();
 		launch(args);
 	}
@@ -40,7 +48,7 @@ public class Main extends Application{
 		PlayerCharacter[] partyMembers = new PlayerCharacter[4];
 		Document players = XMLReader.createDocument("player_characters");
 		for (int i = 0; i < 4; i++) {
-			Element playerClass = (Element)players.getElementsByTagName("character").item(i);
+			Element playerClass = (Element)XMLReader.getElementByID(players, "character", i);
 			partyMembers[i] = (PlayerCharacter) XMLReader.initCharacter(playerClass);
 		}
 		PlayerParty.initialize(partyMembers);

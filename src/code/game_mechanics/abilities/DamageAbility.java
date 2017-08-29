@@ -1,9 +1,11 @@
-package code.game_mechanics;
+package code.game_mechanics.abilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import code.game_mechanics.Library;
 import code.game_mechanics.characters.GameCharacter;
+import code.game_mechanics.status_effects.StatusEffect;
 
 /*
  * Damage abilities are abilities that deal damage to their targets.
@@ -33,45 +35,20 @@ public abstract class DamageAbility extends Ability{
 	public int accuracy;
 	public int critChance;
 	public String element;
-	
-	public int ailmentID;
-	public int ailmentChance;
-	public int ailmentMagnitude;
+
 	/*
-	 * Damage abilities may also inflict status ailments. The ailments they
-	 * can inflict are stored in a hashmap, with the status effect as the
-	 * key and the value being the chance of landing it (as a percent)
+	 * Abilities can also inflict status effects, with arrays containing their
+	 * ids, chances, and magnitudes when inflicted being here.
 	 */
-	HashMap<String, Integer> effects;
+	public int[] effectIDs;
+	public int[] effectChances;
+	public int[] effectMagnitudes;
+	
 	/*
 	 * An abstract method describing the damage formula for the given
 	 * ability.
 	 */
 	public abstract int damageFormula(GameCharacter user, GameCharacter target);
-	
-	/*
-	 * A method to try to inflict a status ailment on a target.
-	 */
-	public boolean statusInfliction(GameCharacter target) {
-		/*
-		 * Pick a random number between 0 and 1 and see if the 
-		 * resulting number is greater than (100 - %chance) multiplied
-		 * by (100 - resistance / 100). If so, then the status ailment 
-		 * lands.
-		 * 
-		 * This number is also affected by the target's resistance
-		 * to the ailment, with larger resistances lowering the
-		 * chance.
-		 * 
-		 * Ailment accuracy is unaffected by things like evasion,
-		 * only the chance of landing it.
-		 */
-		if (Math.random() > ((100.0 - (double)ailmentChance) / 100.0) * 
-				(100.0 - (double)target.statusResistances.get(ailmentID) / 100.0)) {
-			return true;
-		}
-		return false;
-	}
 	
 	/*
 	 * A function to calculate the total multiplier to damage this ability receives. It

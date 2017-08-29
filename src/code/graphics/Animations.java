@@ -58,4 +58,8 @@ public class Animations {
     	damage.setScaleY(3);
     	return damage;
 	}
+	
+	public static void displayDamage(int amount) {
+		
+	}
 }

@@ -52,35 +52,5 @@ public class Constants {
 	 */
 	public static final String selectedIcon = "selected.png";
 	
-	/*
-	 * Array constants which represent the 5 base stats, 3 kinds of points, and 3 additional
-	 * stats.
-	 */
-	public static final String[] stats = {"attack", "intelligence", "speed", "defense", "mdefense"};
-	public static final String[] points = {"HP", "MP", "AP"};
-	public static final String[] finesse = {"accuracy", "evasion", "critChance"};
 	
-	/*
-	 * A function to get the index of a given stat in the stats array.
-	 */
-	public static int getStat(String stat) {
-		for (int i = 0; i < stats.length; i++) {
-			if (stats[i].compareToIgnoreCase(stat) == 0) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-	/*
-	 * A function to get the index of a given point in the points array.
-	 */
-	public static int getPoint(String point) {
-		for (int i = 0; i < points.length; i++) {
-			if (points[i].compareToIgnoreCase(point) == 0) {
-				return i;
-			}
-		}
-		return -1;
-	}
 }

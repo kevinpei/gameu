@@ -18,6 +18,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class Graphics {
 	
@@ -107,5 +108,18 @@ public class Graphics {
      */
     public static void makeInvisible(Object element) {
     	((Node) element).setVisible(false);
+    }
+    
+    public static void hitCharacter(GameCharacter character, int amount) {
+    	Graphics.drawBar(character.pointBars[0], Color.RED, character.points.get("HP")[2], character.points.get("HP")[1]);
+    	//Creates a new animation timeline
+    	//Sets the enemy graphics to blink for 0.8 seconds.
+    	Text damage = Animations.dealDamage(amount);
+    	character.graphics.getChildren().add(damage);
+    	damage.setLayoutX(character.portrait.getLayoutX() + 0.5 * character.portrait.getWidth());
+    	damage.setLayoutY(character.portrait.getLayoutY() + 0.5 * character.portrait.getHeight() - 20);
+    	Animations.flashObject(character.portrait, 4);
+    	Animations.hideObject(damage, 1200);
+    	Animations.playAnimations();
     }
 }

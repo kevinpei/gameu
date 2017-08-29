@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import code.constants.Constants;
 import code.file_management.FileManager;
+import code.game_mechanics.characters.Enemy;
 import code.game_mechanics.characters.PlayerCharacter;
 import code.game_mechanics.party.PlayerParty;
 import code.mouse_engine.MouseEngine;
@@ -44,6 +45,7 @@ public class PlayerGraphics {
     	Group playerGraphics = MessageBoxGraphics.createBorderedBox(192, Constants.playerMessageHeight);
     	Image playerIMG = FileManager.getImage(character);
     	Canvas IMGcanvas = Graphics.drawCanvas(playerIMG, 1);
+    	character.portrait = IMGcanvas;
     	IMGcanvas.setWidth(180);
     	IMGcanvas.setHeight(180);
     	Graphics.addToGroup(playerGraphics, IMGcanvas, 6, 6);
@@ -64,12 +66,14 @@ public class PlayerGraphics {
     	Graphics.drawBar(healthBar,Color.RED, character.points.get("HP")[2], character.points.get("HP")[1]);
     	Label health = Graphics.drawLabel(10, 180 - height, Color.BLACK, 16, "HP: " + 
     			character.points.get("HP")[2] + "/" + character.points.get("HP")[1]);
+    	character.pointBars[0] = healthBar;
     	Canvas manaBar = new Canvas(180, height);
     	manaBar.setLayoutX(6);
     	manaBar.setLayoutY(178);
     	Graphics.drawBar(manaBar,Color.DODGERBLUE, character.points.get("MP")[2], character.points.get("MP")[1]);
     	Label mana = Graphics.drawLabel(10, 178, Color.BLACK, 16, "MP: " + 
     			character.points.get("MP")[2] + "/" + character.points.get("MP")[1]);
+    	character.pointBars[1] = manaBar;
     	points.getChildren().addAll(healthBar, health, manaBar, mana);
     	points.toFront();
     	points.setMouseTransparent(true);
@@ -84,5 +88,9 @@ public class PlayerGraphics {
     public static void redrawBars(PlayerCharacter character) {
     	character.graphics.getChildren().remove(1);
     	Graphics.addToGroup(drawPlayerPoints(character, Constants.barHeight), character.graphics, 0, 0);
+    }
+    
+    public static void hitPlayer(PlayerCharacter character, int amount) {
+    	Graphics.hitCharacter(character, amount);
     }
 }

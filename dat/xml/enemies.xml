@@ -2,7 +2,7 @@
 <enemies>
 	<enemy id="0">
 		<name>Taira no Chouki</name>
-		<description>Vengeful spirit of a betrayed man</description>
+		<description>Vengeful spirit</description>
 		<img>Chouki.png</img>
 		<width>205</width>
 		<icon>enemy.png</icon>

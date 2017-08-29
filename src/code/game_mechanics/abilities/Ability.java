@@ -1,4 +1,4 @@
-package code.game_mechanics;
+package code.game_mechanics.abilities;
 
 /*
  * An abstract class for creating abilities. It includes a name,

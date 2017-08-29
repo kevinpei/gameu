@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import code.constants.Constants;
-import code.game_mechanics.Ability;
-import code.game_mechanics.StatusEffect;
+import code.constants.Terms;
+import code.game_mechanics.Multiplier;
+import code.game_mechanics.abilities.Ability;
+import code.game_mechanics.status_effects.StatusEffect;
+import code.graphics.EnemyGraphics;
+import code.graphics.PlayerGraphics;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 
@@ -29,6 +33,7 @@ public abstract class GameCharacter {
 	 * value and the second index corresponds to the current value.
 	 */
 	public HashMap<String, int[]> stats;
+	
 	/*
 	 * The 3 types of points are as follows:
 	 * HP: When it reaches zero, the character dies
@@ -41,6 +46,7 @@ public abstract class GameCharacter {
 	 * third index corresponds to the current value.
 	 */
 	public HashMap<String, int[]> points;
+	
 	/*
 	 * There are 3 finesse stats:
 	 * Accuracy: Used to determine the chance of landing an attack.
@@ -52,52 +58,53 @@ public abstract class GameCharacter {
 	 * the base value and the second index corresponds to the current value.
 	 */
 	public HashMap<String, int[]> finesse;
+	
+	/*
+	 * These Hashmaps all store multipliers to the base stats, points, and finesse.
+	 * All stat multipliers are additive and can come from status effects, equipment,
+	 * etc.
+	 */
+	public HashMap<String, Multiplier> statMultipliers;
+	public HashMap<String, Multiplier> pointMultipliers;
+	public HashMap<String, Multiplier> finesseMultipliers;
 	/*
 	 * currSpeed is used to track how far the current character is
 	 * in the turn order. When it reaches 1000 the character gets
 	 * a turn and more AP to use.
 	 */
 	public int currSpeed;
+
 	/*
-	 * A stat to multiply all incoming damage by. By default, it's
-	 * 1, but status effects like Breach and Shield can affect it.
-	 * Certain equipment also affects it.
-	 */
-	public double damageMultiplier;
-	/*
-	 * A hashmap of integers with integer keys representing the different status ailments
+	 * A hashmap of integers with integer keys representing the different status effects
 	 * with their ids as the keys and the values representing their magnitude.
-	 * Each status ailment is a continuum ranging from a negative number to a positive 
-	 * number, representing either a positive status for positive numbers or a negative 
-	 * status for negative numbers. It is a hashmap so that more status effects can be 
-	 * added as necessary later. The continuum status effects are as follows:
+	 * Magnitude serves as a way to track the duration of a status ailment, but some status
+	 * effects also increase in severity as the magnitude increases.
 	 * 
-	 * Poison -- Regen		Poison causes HP loss every turn. Regen causes HP gain every turn.
+	 * Negative Status Ailments
 	 * 
-	 * Vulnerable -- Null	Vulnerable causes a large amount of damage when the afflicted is attacked.
-	 * 						Null prevents damage from the next attack.
+	 * Poison 		Poison causes life loss every turn. Higher magnitudes mean more life is lost. Is
+	 * 				opposed to Regen.
 	 * 
-	 * Curse -- Bless		Curse causes damage whenever the afflicted deals damage. Bless heals
-	 * 						the afflicted whenever they deal damage.
+	 * Bomb			Causes a large amount of damage to the afflicted when the afflicted is attacked.
+	 * 				Higher magnitudes increase the amount of damage taken.
 	 * 
-	 * Fear -- Courage		Fear decreases Attack and Intelligence, Courage increases Attack and
-	 * 						Intelligence.
+	 * Curse		Causes damage whenever the afflicted deals damage. Higher magnitudes mean more life
+	 * 				is lost whenever the afflicted deals damage.
 	 * 
-	 * Slow -- Haste		Slow decreases Speed and Evasion, Haste increases Speed and Evasion.
+	 * (Stat) Down	Causes a drop in that stat. Attack Down is for Attack and Intelligence,
+	 * 				Speed Down is for Speed, Defense Down is for Defense and Magic Defense, and Luck Down
+	 * 				is for Accuracy, Evasion, and CritChance. Higher magnitudes mean more of a decrease.
 	 * 
-	 * Addle -- Clarity		Addle causes MP loss every turn. Clarity causes MP gain every turn.
+	 * (Element) Brand	Decreases resistance to the given element. Higher magnitudes mean more of a
+	 * 					decrease.
 	 * 
-	 * Breach -- Shield		Breach decreases Defense and Magic Defense. Shield increases Defense 
-	 * 						and Magic Defense. 
+	 * Sleep		Causes the afflicted to lose their turns. Also sets their evasion to 0 and ensures
+	 * 				the next hit against them will be a critical.
 	 * 
-	 * Unlucky -- Lucky		Unlucky decreases all stats and finesse stats by a small amount, lucky
-	 * 						increases all stats and finesse stats by a small amount.
+	 * Madness		Causes the afflicted to attack randomly. Magnitude decreases by 1 whenever they take
+	 * 				damage.
 	 * 
-	 * Blind -- Eagle Eye	Blind decreases Accuracy and CritChance, Eagle Eye drastically
-	 * 						increases Accuracy and CritChance.
-	 * 
-	 * (Element) Brand -- (Element) Wall	Brand decreases resistance to a given element, Wall increases
-	 * 										resistance to a given element.
+	 * Fear			Causes the afflicted to randomly lose turns. Also 
 	 */
 	public HashMap<Integer, Integer> statusEffects;
 	
@@ -119,15 +126,6 @@ public abstract class GameCharacter {
 	 * negative status effects to land, not positive status effects.
 	 */
 	public HashMap<Integer, Integer> statusResistances;
-	
-	/*
-	 * A hashmap containing various multipliers to apply to the
-	 * damage dealt to the character. The possible multipliers 
-	 * are as follows:
-	 *
-	 * Equipment multipliers - various equipment-based multipliers
-	 */
-	public HashMap<String, Double> multipliers;
 	/*
 	 * A hashmap containing the character's resistances to various
 	 * elements. The 6 elements are as follows:
@@ -153,16 +151,22 @@ public abstract class GameCharacter {
 	public GameCharacter(String name) {
 		this.name = name;
 		this.stats = new HashMap<String, int[]>();
-		for (String stat: Constants.stats) {
+		this.statMultipliers = new HashMap<String, Multiplier>();
+		for (String stat: Terms.stats) {
 			this.stats.put(stat, new int[2]);
+			this.statMultipliers.put(stat, new Multiplier());
 		}
 		this.points = new HashMap<String, int[]>();
-		for (String point: Constants.points) {
+		this.pointMultipliers = new HashMap<String, Multiplier>();
+		for (String point: Terms.points) {
 			this.points.put(point, new int[3]);
+			this.pointMultipliers.put(point, new Multiplier());
 		}
 		this.finesse = new HashMap<String, int[]>();
-		for (String finesse: Constants.finesse) {
+		this.finesseMultipliers = new HashMap<String, Multiplier>();
+		for (String finesse: Terms.finesse) {
 			this.finesse.put(finesse, new int[2]);
+			this.finesseMultipliers.put(finesse, new Multiplier());
 		}
 	}
 	
@@ -171,6 +175,17 @@ public abstract class GameCharacter {
 	 * This variable stores it for modification of the graphics later.
 	 */
 	public Group graphics;
+	
+	/*
+	 * All characters have canvases which contain images of themselves. These images can
+	 * be accessed using the portrait variable.
+	 */
+	public Canvas portrait;
+	
+	/*
+	 * Point Bars are the bars such as health and mana bars used by the character.
+	 */
+	public Canvas[] pointBars;
 	
 	/*
 	 * An arraylist holding all the turns this character will act on in the future.

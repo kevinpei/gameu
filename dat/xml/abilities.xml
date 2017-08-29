@@ -20,19 +20,15 @@
 		<AP>1</AP>
 	</ability>
 	<ability id="1">
-		<name>Test Spell</name>
+		<name>Test Fixed Damage Spell</name>
 		<description>
 		Test spell to test things out.
 		</description>
-		<type>Multiplier</type>
+		<type>Fixed</type>
 		<element>Mystic</element>
-		<power>100</power>
-		<attackStats>intelligence</attackStats>
-		<attackMultipliers>0.3</attackMultipliers>
-		<defenseStats>mdefense</defenseStats>
-		<defenseMultipliers>0.1</defenseMultipliers>
+		<power>500</power>
 		<hits>1</hits>
-		<variance>0.2</variance>
+		<variance>0.1</variance>
 		<accuracy>90</accuracy>
 		<critChance>5</critChance>
 		<HP>0</HP>
@@ -40,15 +36,14 @@
 		<AP>1</AP>
 	</ability>
 	<ability id="2">
-		<name>Test Fixed Damage Attack</name>
+		<name>Test Percent Damage Attack</name>
 		<description>
 		Test attack to test things out.
 		</description>
 		<type>Fixed</type>
 		<element>None</element>
-		<power>500</power>
+		<maxPercent>10</maxPercent>
 		<hits>1</hits>
-		<variance>0.1</variance>
 		<accuracy>90</accuracy>
 		<critChance>5</critChance>
 		<HP>50</HP>
@@ -62,10 +57,10 @@
 		</description>
 		<type>Stat-Based</type>
 		<element>Water</element>
-		<primaryAttackStat>attack</primaryAttackStat>
-		<primaryAttackMultiplier>2</primaryAttackMultiplier>
-		<primaryDefenseStat>defense</primaryDefenseStat>
-		<primaryDefenseMultiplier>1</primaryDefenseStat>
+		<attackStats>attack</attackStats>
+		<attackMultipliers>2</attackMultipliers>
+		<defenseStats>defense</defenseStats>
+		<defenseMultipliers>1</defenseMultipliers>
 		<hits>2</hits>
 		<status>Poison</status>
 		<statusChance>50</statusChance>
@@ -89,9 +84,5 @@
 		<power>30</power>
 		<accuracy>90</accuracy>
 		<critChance>5</critChance>
-	</ability>
-	<ability id="2">
-		<name>tutorial</name>
-	
 	</ability>
 </abilities>

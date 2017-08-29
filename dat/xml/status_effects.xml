@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<status_effects>
-	<status_effect id="0">
-		<max_magnitude>5</max_magnitude>
+<statusEffects>
+	<statusEffect id="0">
 		<type>Damage</type>
-		<!--Damage formula for damage status ailments is base_amount * magnitude ^ exponential_multiplier
+		<name>Poison</name>
+		<description>
+		Lose HP every turn. Higher magnitudes increase the amount lost.
+		</description>
+		<maxMagnitude>5</maxMagnitude>
+		<!--Damage formula for damage status ailments is base_amount * magnitude ^ exponentialMultiplier
 			This amount is then multiplied by a random number between 1 - variance and 1 + variance -->
-		<base_amount>100</base_amount>
+		<baseDamage>100</baseDamage>
 		<!--The exponential multiplier is the amount the magnitude is raised to before being multiplied by the base amount.
 			Higher exponential multipliers means that higher magnitudes become exponentially better.-->
-		<exponential_multiplier>1.25</exponential_multiplier>
-		<variance>0.2</variance>
-		<positive>
-			<name>Regen</name>
-			<description>
-			Gain HP every turn. Higher magnitudes increase the amount gained.
-			</description>
-		</positive>
-		<negative>
-			<name>Poison</name>
-			<description>
-			Lose HP every turn. Higher magnitudes increase the amount lost.
-			</description>
-		</negative>
-	</status_effect>
-</status_effects>
+		<exponentialMultiplier>1.25</exponentialMultiplier>
+		<damageVariance>0.2</damageVariance>
+	</statusEffect>
+	<statusEffect id="1">
+		<type>Stat</type>
+		<name>Attack Down</name>
+		<description>
+		Increases Attack and Intelligence. Higher magnitudes increase the stat gain.
+		</description>
+		<maxMagnitude>10</maxMagnitude>
+		<stats>Attack,Intelligence</stats>
+		<multipliers>-0.05,-0.05</multipliers>
+	</statusEffect>
+	<statusEffect id="2">
+		<type>Vampire</type>
+		<name>Curse</name>
+		<description>
+		Lose HP proportional to any damage dealt. Higher magnitudes increase the amount of damage taken.
+		</description>
+		<maxMagnitude>5</maxMagnitude>
+		<damageMultiplier>0.1</damageMultiplier>
+		<exponentialMultiplier>1</exponentialMultiplier>
+	</statusEffect>
+</statusEffects>

@@ -1,4 +1,4 @@
-package code.game_mechanics;
+package code.game_mechanics.abilities;
 
 import code.game_mechanics.characters.GameCharacter;
 
@@ -39,15 +39,15 @@ public class StatDamageAbility extends DamageAbility{
 		}
 		double rawDefense = 0;
 		for (int j = 0; j < defenseStats.length; j++) {
-			rawDamage += user.stats.get(defenseStats[j])[1] * defenseMultipliers[j];
+			rawDefense += user.stats.get(defenseStats[j])[1] * defenseMultipliers[j];
 		}
 		return (int)Math.round(rawDamage - rawDefense);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see code.game_mechanics.DamageAbility#damageFormula(code.game_mechanics.characters.GameCharacter, code.game_mechanics.characters.GameCharacter)
-	 * 
+	 * @see code.game_mechanics.abilities.DamageAbility#damageFormula(code.game_mechanics.characters.GameCharacter, code.game_mechanics.characters.GameCharacter)
+	 *
 	 * A function to calculate the final damage, taking the raw damage and multiplying
 	 * it by all multipliers.
 	 */

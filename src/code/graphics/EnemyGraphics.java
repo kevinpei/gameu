@@ -76,6 +76,7 @@ public class EnemyGraphics{
     	double Ypos = ((graphics.getHeight() - enemyIMG.getHeight() * scale)/2.5) - Math.abs(offset / 10);
     	//Create the canvas that contains the enemy img.
     	Canvas IMGcanvas = Graphics.drawCanvas(enemyIMG, scale);
+    	character.portrait = IMGcanvas;
     	//Add the canvas to the group.
     	Graphics.addToGroup(enemyGraphics, IMGcanvas, Xpos, Ypos);
     	//Create the canvas that contains the enemy health bar and add it to the group.
@@ -85,6 +86,7 @@ public class EnemyGraphics{
     	Graphics.addToGroup(enemyGraphics, HealthBarCanvas, Xpos + (enemyIMG.getWidth() * scale / 2)
     			- HealthBarCanvas.getWidth() / 2, Ypos + enemyIMG.getHeight() * scale * 1.02);
     	//Add the group to the anchor pane.
+    	character.pointBars[0] = HealthBarCanvas;
     	graphics.getChildren().add(enemyGraphics);
     	enemyGraphics.toBack();
     	return enemyGraphics;
@@ -95,23 +97,9 @@ public class EnemyGraphics{
      * their healthbar to show the new amount.
      */
     public static void hitEnemy(Enemy enemy, int amount) {
-    	Canvas healthbar = (Canvas) enemy.getGraphics().getChildren().get(1);
-    	Graphics.drawBar(healthbar, Color.RED, enemy.points.get("HP")[2], enemy.points.get("HP")[1]);
-    	healthbar.setVisible(true);
-    	Canvas enemyGraphics = (Canvas) enemy.getGraphics().getChildren().get(0);
-    	//Creates a new animation timeline
-    	//Sets the enemy graphics to blink for 0.8 seconds.
-    	Text damage = Animations.dealDamage(amount);
-    	enemy.getGraphics().getChildren().add(damage);
-    	damage.setLayoutX(enemy.getGraphics().getChildren().get(1).getLayoutX() + 
-    			0.5 * ((Canvas) enemy.getGraphics().getChildren().get(0)).getWidth() -
-    			5 * ((int)Math.log10(Math.abs(amount)) + 1));
-    	damage.setLayoutY(enemy.getGraphics().getChildren().get(0).getLayoutY() + 
-    			0.5 * ((Canvas) enemy.getGraphics().getChildren().get(0)).getHeight() - 20);
-    	Animations.flashObject(enemyGraphics, 4);
-    	Animations.hideObject(damage, 1200);
-    	Animations.hideObject(healthbar, 1500);
-    	Animations.playAnimations();
+    	enemy.pointBars[0].setVisible(true);
+    	Animations.hideObject(enemy.pointBars[0], 1500);
+    	Graphics.hitCharacter(enemy, amount);
     }
 	
 }
